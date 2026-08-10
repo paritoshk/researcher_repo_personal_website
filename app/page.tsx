@@ -75,8 +75,8 @@ export default function Home() {
           tagline="Computational biophysics, AI, and drug discovery"
           title="Decoding the brain — from atomic perturbations to therapeutics."
           description="PhD in Biophysics from Cornell. Applying deep learning to protein interactomes and neurodegenerative disease, with a focus on experimentally grounded data for predictive biology. Now based in San Francisco."
-          landscapeImage="https://images.unsplash.com/photo-1628595351029-c2bf17511435?q=80&w=1920&auto=format&fit=crop"
-          landscapeAlt="DNA helix — molecular biology"
+          landscapeImage="/images/shobhita-graduation-wide.jpg"
+          landscapeAlt="Dr. Shobhita Gupta at Cornell"
           animation="subtle"
           variant="compact"
           primaryCTA={{ ctaEnabled: true, text: "View publications", link: "#publications", variant: "default" }}
