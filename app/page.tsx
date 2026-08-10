@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { Hero07 } from "@/components/ui/hero-07";
 import { DynamicIslandNav } from "@/components/ui/dynamic-island-nav";
 import { Section } from "@/components/ui/section";
 import { ArrowUpRight } from "lucide-react";
@@ -11,6 +10,15 @@ const Lumina = dynamic(
   () => import("@/components/ui/lumina-interactive-list").then((m) => m.Component),
   { ssr: false },
 );
+
+const heroSlide = [
+  {
+    title: "Dr. Shobhita Gupta, PhD",
+    description:
+      "Biology needs realistic, experimental-grade data. Most of what we train on today is synthetic, and the field is drifting toward natural language instead of predictive biology \u2014 the kind that can simulate future biological risk for defense and beyond.",
+    media: "/images/shobhita-graduation-wide.jpg",
+  },
+];
 
 const gallerySlides = [
   {
@@ -32,11 +40,6 @@ const gallerySlides = [
     title: "Predictive Biology",
     description: "Experimentally grounded data to power the next era of simulated biology.",
     media: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=1920&auto=format&fit=crop",
-  },
-  {
-    title: "Shobhita",
-    description: "Computational biophysicist. PhD, Cornell. Based in San Francisco.",
-    media: "/images/shobhita-graduation-wide.jpg",
   },
 ];
 
@@ -69,19 +72,9 @@ export default function Home() {
     <main id="top">
       <DynamicIslandNav />
 
-      {/* Editorial intro */}
-      <div id="about" className="scroll-mt-20 pt-24">
-        <Hero07
-          tagline="Computational biophysics, AI, and drug discovery"
-          title="Decoding the brain — from atomic perturbations to therapeutics."
-          description="PhD in Biophysics from Cornell. Applying deep learning to protein interactomes and neurodegenerative disease, with a focus on experimentally grounded data for predictive biology. Now based in San Francisco."
-          landscapeImage="/images/shobhita-graduation-wide.jpg"
-          landscapeAlt="Dr. Shobhita Gupta at Cornell"
-          animation="subtle"
-          variant="compact"
-          primaryCTA={{ ctaEnabled: true, text: "View publications", link: "#publications", variant: "default" }}
-          secondaryCTA={{ ctaEnabled: true, text: "Get in touch", link: "#contact", variant: "link" }}
-        />
+      {/* Hero — her photo, name, thesis in a nutshell */}
+      <div id="about">
+        <Lumina slides={heroSlide} autoSlide={false} />
       </div>
 
       <Section id="research" eyebrow="Focus" title="Research">

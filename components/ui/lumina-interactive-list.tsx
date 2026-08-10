@@ -365,7 +365,15 @@ export function Component({
             scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), shaderMaterial));
             
             for (const s of slides) { try { slideTextures.push(await loadImageTexture(s.media)); } catch { console.warn("Failed texture"); } }
-            if (slideTextures.length >= 2) {
+            if (slideTextures.length === 1) {
+                shaderMaterial.uniforms.uTexture1.value = slideTextures[0];
+                shaderMaterial.uniforms.uTexture2.value = slideTextures[0];
+                shaderMaterial.uniforms.uTexture1Size.value = slideTextures[0].userData.size;
+                shaderMaterial.uniforms.uTexture2Size.value = slideTextures[0].userData.size;
+                texturesLoaded = true; sliderEnabled = false;
+                updateShaderUniforms();
+                root.classList.add("loaded");
+            } else if (slideTextures.length >= 2) {
                 shaderMaterial.uniforms.uTexture1.value = slideTextures[0];
                 shaderMaterial.uniforms.uTexture2.value = slideTextures[1];
                 shaderMaterial.uniforms.uTexture1Size.value = slideTextures[0].userData.size;
@@ -420,20 +428,22 @@ export function Component({
     return () => {};
   }, []);
 
+  const single = (slidesProp?.length ?? 6) === 1;
+
   return (
     <>
 
       <main className={`slider-wrapper${embedded ? " lumina-embedded" : ""}`} ref={containerRef}>
         <canvas className="webgl-canvas"></canvas>
-        <span className="slide-number">01</span>
-        <span className="slide-total">06</span>
+        {!single && <span className="slide-number">01</span>}
+        {!single && <span className="slide-total">06</span>}
         
         <div className="slide-content">
             <h1 className="slide-title"></h1>
             <p className="slide-description"></p>
         </div>
        
-        <nav className="slides-navigation"></nav>
+        {!single && <nav className="slides-navigation"></nav>}
       </main>
     </>
   );
