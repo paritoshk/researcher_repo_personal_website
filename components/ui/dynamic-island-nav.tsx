@@ -24,7 +24,7 @@ const DynamicIslandNav = () => {
       initial={{ y: -60, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed left-1/2 top-3 z-50 -translate-x-1/2"
+      className="pointer-events-none fixed inset-x-0 top-3 z-50 flex justify-center"
     >
       <motion.div
         animate={{
@@ -34,7 +34,7 @@ const DynamicIslandNav = () => {
           paddingBottom: compact ? 6 : 10,
         }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        className="flex items-center gap-3 rounded-full border border-white/10 bg-black/80 shadow-lg shadow-black/40 backdrop-blur-md sm:gap-5 md:gap-8"
+        className="pointer-events-auto flex items-center gap-3 rounded-full border border-white/10 bg-black/80 shadow-lg shadow-black/40 backdrop-blur-md sm:gap-5 md:gap-8"
       >
         <a href="#top" className="mr-1 hidden text-sm font-semibold tracking-tight text-primary sm:block">
           SG

@@ -138,3 +138,40 @@
 .lumina-embedded:hover .slides-navigation {
   opacity: 1;
 }
+
+/* Mobile: keep side nav from overlapping the title/description */
+@media (max-width: 640px) {
+  .slide-content {
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 4.5rem;
+    max-width: none;
+  }
+  .slides-navigation {
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    text-align: left;
+  }
+  .slide-nav-title {
+    display: none;
+  }
+  .slide-progress-line {
+    width: 2.25rem;
+  }
+  .lumina-embedded .slides-navigation {
+    opacity: 1;
+  }
+  .lumina-embedded .slide-content {
+    bottom: 3.5rem;
+  }
+  .slide-number {
+    left: 1.25rem;
+  }
+  .slide-total {
+    left: 3.5rem;
+  }
+}

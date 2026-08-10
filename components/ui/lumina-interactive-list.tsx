@@ -409,16 +409,35 @@ export function Component({
 
         if (scrollHijack) {
             let wheelLock = false;
+            const tryNavigate = (goingDown: boolean) => {
+                if (wheelLock || isTransitioning || !texturesLoaded) return;
+                wheelLock = true;
+                setTimeout(() => { wheelLock = false; }, 1400);
+                navigateToSlide(currentSlideIndex + (goingDown ? 1 : -1));
+            };
             root.addEventListener("wheel", (e: WheelEvent) => {
                 const goingDown = e.deltaY > 0;
                 const atEnd = currentSlideIndex === slides.length - 1;
                 const atStart = currentSlideIndex === 0;
                 if ((goingDown && !atEnd) || (!goingDown && !atStart)) {
                     e.preventDefault();
-                    if (wheelLock || isTransitioning || !texturesLoaded) return;
-                    wheelLock = true;
-                    setTimeout(() => { wheelLock = false; }, 1400);
-                    navigateToSlide(currentSlideIndex + (goingDown ? 1 : -1));
+                    tryNavigate(goingDown);
+                }
+            }, { passive: false });
+
+            let touchStartY = 0;
+            root.addEventListener("touchstart", (e: TouchEvent) => {
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+            root.addEventListener("touchmove", (e: TouchEvent) => {
+                const delta = touchStartY - e.touches[0].clientY;
+                const goingDown = delta > 0;
+                const atEnd = currentSlideIndex === slides.length - 1;
+                const atStart = currentSlideIndex === 0;
+                if (Math.abs(delta) > 24 && ((goingDown && !atEnd) || (!goingDown && !atStart))) {
+                    e.preventDefault();
+                    tryNavigate(goingDown);
+                    touchStartY = e.touches[0].clientY;
                 }
             }, { passive: false });
         }

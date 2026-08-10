@@ -87,7 +87,7 @@ export default function Home() {
             Research
           </h2>
         </div>
-        <Lumina slides={gallerySlides} embedded scrollHijack />
+        <Lumina slides={gallerySlides} embedded scrollHijack autoSlide={false} />
       </section>
 
       <Section id="publications" eyebrow="Selected work" title="Publications">
