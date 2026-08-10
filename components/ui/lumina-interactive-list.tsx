@@ -419,13 +419,23 @@ export function Component({
                     window.scrollTo({ top, behavior: "smooth" });
                 };
                 const slideTop = (idx: number, total: number) => track.offsetTop + ((idx + 0.5) / slides.length) * total;
+                let pinDisabled = false;
                 const onScroll = () => {
                     if (!texturesLoaded) return;
                     const rect = track.getBoundingClientRect();
+                    if (document.documentElement.dataset.anchorJump) {
+                        // Anchor navigation may legitimately pass the section; release the pin
+                        if (rect.bottom < window.innerHeight) pinDisabled = true;
+                        return;
+                    }
                     const total = trackTotal();
                     if (total <= 0) return;
                     const progress = Math.min(0.999, Math.max(0, -rect.top / total));
                     const idx = Math.min(slides.length - 1, Math.floor(progress * slides.length));
+                    if (pinDisabled) {
+                        if (idx !== currentSlideIndex && !isTransitioning) navigateToSlide(idx);
+                        return;
+                    }
                     // Hold position while a transition is playing
                     if (isTransitioning && idx > currentSlideIndex) {
                         window.scrollTo({ top: slideTop(currentSlideIndex, total), behavior: "instant" as ScrollBehavior });

@@ -3,6 +3,13 @@
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 
+const markAnchorJump = () => {
+  document.documentElement.dataset.anchorJump = "1";
+  window.setTimeout(() => {
+    delete document.documentElement.dataset.anchorJump;
+  }, 1800);
+};
+
 const navItems = [
   { label: "About", href: "#about" },
   { label: "Research", href: "#research" },
@@ -36,13 +43,14 @@ const DynamicIslandNav = () => {
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className="pointer-events-auto flex items-center gap-3 rounded-full border border-white/10 bg-black/80 shadow-lg shadow-black/40 backdrop-blur-md sm:gap-5 md:gap-8"
       >
-        <a href="#top" className="mr-1 hidden text-sm font-semibold tracking-tight text-primary sm:block">
+        <a href="#top" onClick={markAnchorJump} className="mr-1 hidden text-sm font-semibold tracking-tight text-primary sm:block">
           SG
         </a>
         {navItems.map((item) => (
           <a
             key={item.label}
             href={item.href}
+            onClick={markAnchorJump}
             className="text-[10px] text-primary/70 transition-colors hover:text-primary sm:text-xs md:text-sm"
           >
             {item.label}
