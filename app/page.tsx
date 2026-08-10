@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import { DynamicIslandNav } from "@/components/ui/dynamic-island-nav";
 import { Section } from "@/components/ui/section";
 import { ArrowUpRight } from "lucide-react";
+import { BlurText } from "@/components/ui/blur-text";
+import { PageLoader } from "@/components/ui/page-loader";
 import "@/components/ui/lumina.css";
 
 const Lumina = dynamic(
@@ -13,9 +15,8 @@ const Lumina = dynamic(
 
 const heroSlide = [
   {
-    title: "Dr. Shobhita Gupta, PhD",
-    description:
-      "Biology needs realistic, experimental-grade data. Most of what we train on today is synthetic, and the field is drifting toward natural language instead of predictive biology \u2014 the kind that can simulate future biological risk for defense and beyond.",
+    title: "",
+    description: "",
     media: "/images/shobhita-graduation-wide.jpg",
   },
 ];
@@ -70,11 +71,28 @@ const publications = [
 export default function Home() {
   return (
     <main id="top">
+      <PageLoader />
       <DynamicIslandNav />
 
-      {/* Hero — her photo, name, thesis in a nutshell */}
-      <div id="about">
+      {/* Hero — her photo, name landing, one-line thesis */}
+      <div id="about" className="lumina-hero relative">
         <Lumina slides={heroSlide} autoSlide={false} />
+        <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end px-5 pb-12 sm:px-10 sm:pb-14">
+          <h1 className="font-light leading-[0.95] tracking-tight text-[#E1E0CC]">
+            <BlurText
+              text="Dr. Shobhita Gupta"
+              animateBy="letters"
+              delay={55}
+              className="text-[13.5vw] sm:text-[10vw] lg:text-[8.5vw]"
+            />
+          </h1>
+          <BlurText
+            text="Making biology predictive with experimental-grade data, not synthetic proxies."
+            animateBy="words"
+            delay={110}
+            className="mt-4 max-w-2xl text-sm text-[#E1E0CC]/80 sm:text-base md:text-lg"
+          />
+        </div>
       </div>
 
       <section id="research" data-lumina-track className="relative h-[400vh] scroll-mt-0">

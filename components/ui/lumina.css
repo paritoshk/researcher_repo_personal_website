@@ -107,6 +107,36 @@
   transition: width 0.1s ease, opacity 0.3s ease;
 }
 
+/* Arrow controls next to the counter */
+.slide-arrows {
+  position: absolute;
+  top: 4.4rem;
+  left: 7rem;
+  z-index: 12;
+  display: flex;
+  gap: 0.25rem;
+}
+.lumina-embedded .slide-arrows {
+  top: 1.4rem;
+}
+.slide-arrow {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+.slide-arrow:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Hero with custom overlay: hide the built-in slide text */
+.lumina-hero .slide-content {
+  display: none;
+}
+
 /* Embedded (sticky fullscreen rounded rectangle) variant */
 .lumina-embedded {
   height: calc(100svh - 12rem);
@@ -174,5 +204,12 @@
   }
   .slide-total {
     left: 3.5rem;
+  }
+  .slide-arrows {
+    left: 5.75rem;
+    top: 4.3rem;
+  }
+  .lumina-embedded .slide-arrows {
+    top: 1.3rem;
   }
 }

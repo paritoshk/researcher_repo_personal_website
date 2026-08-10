@@ -410,17 +410,38 @@ export function Component({
         if (scrollHijack) {
             const track = root.closest("[data-lumina-track]") as HTMLElement | null;
             if (track) {
+                let maxSeen = 0;
+                const trackTotal = () => track.offsetHeight - window.innerHeight;
+                const scrollToSlide = (idx: number) => {
+                    const total = trackTotal();
+                    if (total <= 0) return;
+                    const top = track.offsetTop + ((idx + 0.5) / slides.length) * total;
+                    window.scrollTo({ top, behavior: "smooth" });
+                };
                 const onScroll = () => {
-                    if (!texturesLoaded || isTransitioning) return;
+                    if (!texturesLoaded) return;
                     const rect = track.getBoundingClientRect();
-                    const total = track.offsetHeight - window.innerHeight;
+                    const total = trackTotal();
                     if (total <= 0) return;
                     const progress = Math.min(0.999, Math.max(0, -rect.top / total));
                     const idx = Math.min(slides.length - 1, Math.floor(progress * slides.length));
-                    if (idx !== currentSlideIndex) navigateToSlide(idx);
+                    if (idx > maxSeen + 1) {
+                        // Flung past unseen slides: snap back to the next unseen one
+                        window.scrollTo({ top: track.offsetTop + ((maxSeen + 1 + 0.5) / slides.length) * total });
+                        return;
+                    }
+                    if (idx !== currentSlideIndex && !isTransitioning) {
+                        navigateToSlide(idx);
+                        maxSeen = Math.max(maxSeen, idx);
+                    }
                 };
                 window.addEventListener("scroll", onScroll, { passive: true });
                 onScroll();
+                root.querySelector(".slide-arrow-prev")?.addEventListener("click", () => scrollToSlide(Math.max(0, currentSlideIndex - 1)));
+                root.querySelector(".slide-arrow-next")?.addEventListener("click", () => { maxSeen = Math.max(maxSeen, Math.min(slides.length - 1, currentSlideIndex + 1)); scrollToSlide(Math.min(slides.length - 1, currentSlideIndex + 1)); });
+            } else {
+                root.querySelector(".slide-arrow-prev")?.addEventListener("click", () => navigateToSlide(Math.max(0, currentSlideIndex - 1)));
+                root.querySelector(".slide-arrow-next")?.addEventListener("click", () => navigateToSlide(Math.min(slides.length - 1, currentSlideIndex + 1)));
             }
         }
     };
@@ -438,6 +459,16 @@ export function Component({
         <canvas className="webgl-canvas"></canvas>
         {!single && <span className="slide-number">01</span>}
         {!single && <span className="slide-total">06</span>}
+        {!single && (
+          <div className="slide-arrows">
+            <button type="button" className="slide-arrow slide-arrow-prev" aria-label="Previous slide">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6" /></svg>
+            </button>
+            <button type="button" className="slide-arrow slide-arrow-next" aria-label="Next slide">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+          </div>
+        )}
         
         <div className="slide-content">
             <h1 className="slide-title"></h1>
