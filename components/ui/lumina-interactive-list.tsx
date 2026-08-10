@@ -408,38 +408,20 @@ export function Component({
         window.addEventListener("resize", () => { if (renderer) { renderer.setSize(root.clientWidth, root.clientHeight); shaderMaterial.uniforms.uResolution.value.set(root.clientWidth, root.clientHeight); } });
 
         if (scrollHijack) {
-            let wheelLock = false;
-            const tryNavigate = (goingDown: boolean) => {
-                if (wheelLock || isTransitioning || !texturesLoaded) return;
-                wheelLock = true;
-                setTimeout(() => { wheelLock = false; }, 1400);
-                navigateToSlide(currentSlideIndex + (goingDown ? 1 : -1));
-            };
-            root.addEventListener("wheel", (e: WheelEvent) => {
-                const goingDown = e.deltaY > 0;
-                const atEnd = currentSlideIndex === slides.length - 1;
-                const atStart = currentSlideIndex === 0;
-                if ((goingDown && !atEnd) || (!goingDown && !atStart)) {
-                    e.preventDefault();
-                    tryNavigate(goingDown);
-                }
-            }, { passive: false });
-
-            let touchStartY = 0;
-            root.addEventListener("touchstart", (e: TouchEvent) => {
-                touchStartY = e.touches[0].clientY;
-            }, { passive: true });
-            root.addEventListener("touchmove", (e: TouchEvent) => {
-                const delta = touchStartY - e.touches[0].clientY;
-                const goingDown = delta > 0;
-                const atEnd = currentSlideIndex === slides.length - 1;
-                const atStart = currentSlideIndex === 0;
-                if (Math.abs(delta) > 24 && ((goingDown && !atEnd) || (!goingDown && !atStart))) {
-                    e.preventDefault();
-                    tryNavigate(goingDown);
-                    touchStartY = e.touches[0].clientY;
-                }
-            }, { passive: false });
+            const track = root.closest("[data-lumina-track]") as HTMLElement | null;
+            if (track) {
+                const onScroll = () => {
+                    if (!texturesLoaded || isTransitioning) return;
+                    const rect = track.getBoundingClientRect();
+                    const total = track.offsetHeight - window.innerHeight;
+                    if (total <= 0) return;
+                    const progress = Math.min(0.999, Math.max(0, -rect.top / total));
+                    const idx = Math.min(slides.length - 1, Math.floor(progress * slides.length));
+                    if (idx !== currentSlideIndex) navigateToSlide(idx);
+                };
+                window.addEventListener("scroll", onScroll, { passive: true });
+                onScroll();
+            }
         }
     };
 

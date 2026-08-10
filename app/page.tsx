@@ -77,17 +77,19 @@ export default function Home() {
         <Lumina slides={heroSlide} autoSlide={false} />
       </div>
 
-      <section id="research" className="scroll-mt-24 py-16 md:py-24">
-        <div className="mx-auto w-full max-w-5xl px-5 sm:px-8">
-          <div className="mb-3 flex items-center gap-3">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            <span className="text-xs uppercase tracking-[0.25em] text-primary/60">Focus</span>
+      <section id="research" data-lumina-track className="relative h-[400vh] scroll-mt-0">
+        <div className="sticky top-0 flex h-screen flex-col justify-center px-4 sm:px-8">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="mb-3 flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-primary" />
+              <span className="text-xs uppercase tracking-[0.25em] text-primary/60">Focus</span>
+            </div>
+            <h2 className="mb-6 text-3xl font-medium tracking-tight text-primary sm:text-4xl md:text-5xl">
+              Research
+            </h2>
+            <Lumina slides={gallerySlides} embedded scrollHijack autoSlide={false} />
           </div>
-          <h2 className="mb-8 text-3xl font-medium tracking-tight text-primary sm:text-4xl md:text-5xl">
-            Research
-          </h2>
         </div>
-        <Lumina slides={gallerySlides} embedded scrollHijack autoSlide={false} />
       </section>
 
       <Section id="publications" eyebrow="Selected work" title="Publications">

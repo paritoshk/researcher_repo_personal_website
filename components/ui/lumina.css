@@ -107,9 +107,10 @@
   transition: width 0.1s ease, opacity 0.3s ease;
 }
 
-/* Embedded (mid-page, full-width) variant */
+/* Embedded (sticky fullscreen rounded rectangle) variant */
 .lumina-embedded {
-  height: min(58vh, 560px);
+  height: calc(100svh - 12rem);
+  border-radius: 1.5rem;
 }
 .lumina-embedded::after {
   background: linear-gradient(
