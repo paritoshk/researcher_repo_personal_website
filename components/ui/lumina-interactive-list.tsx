@@ -432,23 +432,15 @@ export function Component({
                     if (total <= 0) return;
                     const progress = Math.min(0.999, Math.max(0, -rect.top / total));
                     const idx = Math.min(slides.length - 1, Math.floor(progress * slides.length));
-                    if (pinDisabled) {
-                        if (idx !== currentSlideIndex && !isTransitioning) navigateToSlide(idx);
-                        return;
-                    }
-                    // Hold position while a transition is playing
-                    if (isTransitioning && idx > currentSlideIndex) {
-                        window.scrollTo({ top: slideTop(currentSlideIndex, total), behavior: "instant" as ScrollBehavior });
-                        return;
-                    }
-                    // Never allow jumping more than one slide ahead of the one on screen
-                    if (idx > currentSlideIndex + 1) {
-                        window.scrollTo({ top: slideTop(currentSlideIndex + 1, total), behavior: "instant" as ScrollBehavior });
+                    if (!pinDisabled && maxSeen < slides.length - 1 && rect.bottom < window.innerHeight + 2) {
+                        // Guard only the exit: cannot leave the section before every slide has been shown
+                        window.scrollTo({ top: slideTop(Math.min(maxSeen + 1, slides.length - 1), total), behavior: "instant" as ScrollBehavior });
                         return;
                     }
                     if (idx !== currentSlideIndex && !isTransitioning) {
-                        navigateToSlide(idx);
-                        maxSeen = Math.max(maxSeen, idx);
+                        const step = pinDisabled ? idx : Math.min(idx, currentSlideIndex + 1);
+                        navigateToSlide(step);
+                        maxSeen = Math.max(maxSeen, step);
                     }
                 };
                 window.addEventListener("scroll", onScroll, { passive: true });
