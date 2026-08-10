@@ -91,3 +91,28 @@
   background: #fff;
   transition: width 0.1s ease, opacity 0.3s ease;
 }
+
+/* Embedded (mid-page, bordered) variant */
+.lumina-embedded {
+  height: min(72vh, 680px);
+  border: 1px solid rgba(225, 224, 204, 0.18);
+  border-radius: 1.5rem;
+}
+.lumina-embedded .slide-number,
+.lumina-embedded .slide-total {
+  top: 2rem;
+}
+.lumina-embedded .slide-content {
+  bottom: 3rem;
+}
+.lumina-embedded .slide-title {
+  font-size: clamp(1.9rem, 4.5vw, 3.75rem);
+}
+.lumina-embedded .slides-navigation {
+  bottom: 3rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.lumina-embedded:hover .slides-navigation {
+  opacity: 1;
+}

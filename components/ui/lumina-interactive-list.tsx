@@ -12,10 +12,22 @@ export interface LuminaSlide {
   media: string;
 }
 
-export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {}) {
-  const containerRef = useRef<HTMLDivElement>(null);
+export function Component({
+  slides: slidesProp,
+  autoSlide = true,
+  scrollHijack = false,
+  embedded = false,
+}: {
+  slides?: LuminaSlide[];
+  autoSlide?: boolean;
+  scrollHijack?: boolean;
+  embedded?: boolean;
+} = {}) {
+  const containerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    const root = containerRef.current as HTMLElement;
+    if (!root) return;
     // --- DYNAMIC SCRIPT LOADING ---
     const loadScripts = async () => {
       const loadScript = (src: string, globalName: string) => new Promise<void>((res, rej) => {
@@ -173,8 +185,8 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
         };
 
         const updateContent = (idx: number) => {
-            const titleEl = document.getElementById('mainTitle');
-            const descEl = document.getElementById('mainDesc');
+            const titleEl = root.querySelector('.slide-title') as HTMLElement;
+            const descEl = root.querySelector('.slide-description') as HTMLElement;
             if (titleEl && descEl) {
                  // Universal animate out (fade up)
                  gsap.to(titleEl.children, { y: -20, opacity: 0, duration: 0.5, stagger: 0.02, ease: "power2.in" });
@@ -276,7 +288,7 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
         };
 
         const createSlidesNavigation = () => {
-            const nav = document.getElementById("slidesNav"); if (!nav) return;
+            const nav = root.querySelector(".slides-navigation") as HTMLElement; if (!nav) return;
             nav.innerHTML = "";
             slides.forEach((slide, i) => {
                 const item = document.createElement("div");
@@ -295,13 +307,13 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
             });
         };
 
-        const updateNavigationState = (idx: number) => document.querySelectorAll(".slide-nav-item").forEach((el, i) => el.classList.toggle("active", i === idx));
-        const updateSlideProgress = (idx: number, prog: number) => { const el = document.querySelectorAll(".slide-nav-item")[idx]?.querySelector(".slide-progress-fill") as HTMLElement; if (el) { el.style.width = `${prog}%`; el.style.opacity = '1'; } };
-        const fadeSlideProgress = (idx: number) => { const el = document.querySelectorAll(".slide-nav-item")[idx]?.querySelector(".slide-progress-fill") as HTMLElement; if (el) { el.style.opacity = '0'; setTimeout(() => el.style.width = "0%", 300); } };
-        const quickResetProgress = (idx: number) => { const el = document.querySelectorAll(".slide-nav-item")[idx]?.querySelector(".slide-progress-fill") as HTMLElement; if (el) { el.style.transition = "width 0.2s ease-out"; el.style.width = "0%"; setTimeout(() => el.style.transition = "width 0.1s ease, opacity 0.3s ease", 200); } };
+        const updateNavigationState = (idx: number) => root.querySelectorAll(".slide-nav-item").forEach((el, i) => el.classList.toggle("active", i === idx));
+        const updateSlideProgress = (idx: number, prog: number) => { const el = root.querySelectorAll(".slide-nav-item")[idx]?.querySelector(".slide-progress-fill") as HTMLElement; if (el) { el.style.width = `${prog}%`; el.style.opacity = '1'; } };
+        const fadeSlideProgress = (idx: number) => { const el = root.querySelectorAll(".slide-nav-item")[idx]?.querySelector(".slide-progress-fill") as HTMLElement; if (el) { el.style.opacity = '0'; setTimeout(() => el.style.width = "0%", 300); } };
+        const quickResetProgress = (idx: number) => { const el = root.querySelectorAll(".slide-nav-item")[idx]?.querySelector(".slide-progress-fill") as HTMLElement; if (el) { el.style.transition = "width 0.2s ease-out"; el.style.width = "0%"; setTimeout(() => el.style.transition = "width 0.1s ease, opacity 0.3s ease", 200); } };
         const updateCounter = (idx: number) => { 
-            const sn = document.getElementById("slideNumber"); if (sn) sn.textContent = String(idx + 1).padStart(2, "0"); 
-            const st = document.getElementById("slideTotal"); if (st) st.textContent = String(slides.length).padStart(2, "0"); 
+            const sn = root.querySelector(".slide-number"); if (sn) sn.textContent = String(idx + 1).padStart(2, "0"); 
+            const st = root.querySelector(".slide-total"); if (st) st.textContent = String(slides.length).padStart(2, "0"); 
         };
 
         const startAutoSlideTimer = () => {
@@ -329,15 +341,15 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
         });
 
         const initRenderer = async () => {
-            const canvas = document.querySelector(".webgl-canvas") as HTMLCanvasElement; if (!canvas) return;
+            const canvas = root.querySelector(".webgl-canvas") as HTMLCanvasElement; if (!canvas) return;
             scene = new THREE.Scene(); camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
             renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
-            renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(root.clientWidth, root.clientHeight); renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             
             shaderMaterial = new THREE.ShaderMaterial({
                 uniforms: {
                     uTexture1: { value: null }, uTexture2: { value: null }, uProgress: { value: 0 },
-                    uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                    uResolution: { value: new THREE.Vector2(root.clientWidth, root.clientHeight) },
                     uTexture1Size: { value: new THREE.Vector2(1, 1) }, uTexture2Size: { value: new THREE.Vector2(1, 1) },
                     uEffectType: { value: 0 },
                     uGlobalIntensity: { value: 1.0 }, uSpeedMultiplier: { value: 1.0 }, uDistortionStrength: { value: 1.0 }, uColorEnhancement: { value: 1.0 },
@@ -358,9 +370,9 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
                 shaderMaterial.uniforms.uTexture2.value = slideTextures[1];
                 shaderMaterial.uniforms.uTexture1Size.value = slideTextures[0].userData.size;
                 shaderMaterial.uniforms.uTexture2Size.value = slideTextures[1].userData.size;
-                texturesLoaded = true; sliderEnabled = true;
+                texturesLoaded = true; sliderEnabled = autoSlide;
                 updateShaderUniforms(); // Apply config
-                document.querySelector(".slider-wrapper")?.classList.add("loaded"); // Fade in immediately
+                root.classList.add("loaded"); // Fade in immediately
                 safeStartTimer(500);
             }
             
@@ -371,8 +383,8 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
         createSlidesNavigation(); updateCounter(0); 
         
         // Init text content
-        const tEl = document.getElementById('mainTitle');
-        const dEl = document.getElementById('mainDesc');
+        const tEl = root.querySelector('.slide-title') as HTMLElement;
+        const dEl = root.querySelector('.slide-description') as HTMLElement;
         if (tEl && dEl) {
             tEl.innerHTML = splitText(slides[0].title);
             dEl.textContent = slides[0].description;
@@ -385,7 +397,23 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
         
         // Listeners
         document.addEventListener("visibilitychange", () => document.hidden ? stopAutoSlideTimer() : (!isTransitioning && safeStartTimer()));
-        window.addEventListener("resize", () => { if (renderer) { renderer.setSize(window.innerWidth, window.innerHeight); shaderMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight); } });
+        window.addEventListener("resize", () => { if (renderer) { renderer.setSize(root.clientWidth, root.clientHeight); shaderMaterial.uniforms.uResolution.value.set(root.clientWidth, root.clientHeight); } });
+
+        if (scrollHijack) {
+            let wheelLock = false;
+            root.addEventListener("wheel", (e: WheelEvent) => {
+                const goingDown = e.deltaY > 0;
+                const atEnd = currentSlideIndex === slides.length - 1;
+                const atStart = currentSlideIndex === 0;
+                if ((goingDown && !atEnd) || (!goingDown && !atStart)) {
+                    e.preventDefault();
+                    if (wheelLock || isTransitioning || !texturesLoaded) return;
+                    wheelLock = true;
+                    setTimeout(() => { wheelLock = false; }, 1400);
+                    navigateToSlide(currentSlideIndex + (goingDown ? 1 : -1));
+                }
+            }, { passive: false });
+        }
     };
 
     loadScripts();
@@ -395,17 +423,17 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
   return (
     <>
 
-      <main className="slider-wrapper" ref={containerRef}>
+      <main className={`slider-wrapper${embedded ? " lumina-embedded" : ""}`} ref={containerRef}>
         <canvas className="webgl-canvas"></canvas>
-        <span className="slide-number" id="slideNumber">01</span>
-        <span className="slide-total" id="slideTotal">06</span>
+        <span className="slide-number">01</span>
+        <span className="slide-total">06</span>
         
         <div className="slide-content">
-            <h1 className="slide-title" id="mainTitle"></h1>
-            <p className="slide-description" id="mainDesc"></p>
+            <h1 className="slide-title"></h1>
+            <p className="slide-description"></p>
         </div>
        
-        <nav className="slides-navigation" id="slidesNav"></nav>
+        <nav className="slides-navigation"></nav>
       </main>
     </>
   );

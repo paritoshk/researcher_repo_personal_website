@@ -36,7 +36,7 @@ const gallerySlides = [
   {
     title: "Shobhita",
     description: "Computational biophysicist. PhD, Cornell. Based in San Francisco.",
-    media: "/images/shobhita-graduation-wide.png",
+    media: "/images/shobhita-graduation-wide.jpg",
   },
 ];
 
@@ -64,35 +64,13 @@ const publications = [
   },
 ];
 
-const research = [
-  {
-    title: "AI x Drug Discovery",
-    body: "Applying deep learning to uncover novel therapeutic mechanisms — including computational prediction of a small-molecule mechanism with potential to guide future Alzheimer's therapeutics.",
-  },
-  {
-    title: "Protein–Protein Interactomes",
-    body: "Structurally informed interactome modeling to reveal how atomic-level perturbations from disease mutations propagate across the human proteome.",
-  },
-  {
-    title: "Realistic Data for Predictive Biology",
-    body: "Biology needs more experimentally grounded data — most training data today is synthetic, and the field's focus is drifting toward natural language rather than predictive biology. Experimental-quality data is what will power simulation of future biological risk (CBRN) for defense and beyond.",
-  },
-  {
-    title: "Neurodegenerative Disorders",
-    body: "Decoding the brain: from quantum-mechanical first principles to network-level disease perturbations in Alzheimer's and related disorders.",
-  },
-];
-
 export default function Home() {
   return (
     <main id="top">
       <DynamicIslandNav />
 
-      {/* Gallery hero — glass-transition slideshow */}
-      <Lumina slides={gallerySlides} />
-
       {/* Editorial intro */}
-      <div id="about" className="scroll-mt-20 pt-10">
+      <div id="about" className="scroll-mt-20 pt-24">
         <Hero07
           tagline="Computational biophysics, AI, and drug discovery"
           title="Decoding the brain — from atomic perturbations to therapeutics."
@@ -107,17 +85,7 @@ export default function Home() {
       </div>
 
       <Section id="research" eyebrow="Focus" title="Research">
-        <div className="grid gap-6 sm:grid-cols-2">
-          {research.map((r) => (
-            <div
-              key={r.title}
-              className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-colors hover:bg-white/[0.06]"
-            >
-              <h3 className="mb-3 text-lg font-medium text-primary">{r.title}</h3>
-              <p className="text-sm leading-relaxed text-primary/60">{r.body}</p>
-            </div>
-          ))}
-        </div>
+        <Lumina slides={gallerySlides} embedded scrollHijack />
       </Section>
 
       <Section id="publications" eyebrow="Selected work" title="Publications">
@@ -178,7 +146,7 @@ export default function Home() {
         </ul>
       </Section>
 
-      {/* Velvet Mystique footer */}
+      {/* Night footer */}
       <footer id="contact" className="relative overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1578301978018-3005759f48f7?q=80&w=1920&auto=format&fit=crop"
@@ -189,12 +157,9 @@ export default function Home() {
         <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.4] mix-blend-overlay" />
         <div className="relative z-10 mx-auto max-w-5xl px-6 py-24 text-center md:py-36">
           <p className="mb-3 text-xs uppercase tracking-[0.3em] text-white/50">Contact</p>
-          <h2 className="mb-4 text-3xl font-medium tracking-tight text-white sm:text-5xl">
-            Velvet Mystique
+          <h2 className="mb-10 text-3xl font-medium tracking-tight text-white sm:text-5xl">
+            Shobhita Gupta
           </h2>
-          <p className="mx-auto mb-10 max-w-md text-sm text-white/60 sm:text-base">
-            Wrapped in the deep, luxurious embrace of the night.
-          </p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm">
             <a
               href="https://scholar.google.com/citations?hl=en&user=JzQ0ALcAAAAJ"

@@ -11,19 +11,18 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
 h1,
 h2,
 h3,
 .slide-title {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   font-weight: 400;
   letter-spacing: -0.02em;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 .noise-overlay {
