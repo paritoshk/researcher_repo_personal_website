@@ -1,7 +1,44 @@
-import { PrismaHero } from "@/components/ui/prisma-hero";
+"use client";
+
+import dynamic from "next/dynamic";
+import { Hero07 } from "@/components/ui/hero-07";
 import { DynamicIslandNav } from "@/components/ui/dynamic-island-nav";
 import { Section } from "@/components/ui/section";
 import { ArrowUpRight } from "lucide-react";
+import "@/components/ui/lumina.css";
+
+const Lumina = dynamic(
+  () => import("@/components/ui/lumina-interactive-list").then((m) => m.Component),
+  { ssr: false },
+);
+
+const gallerySlides = [
+  {
+    title: "Decoding the Brain",
+    description: "Neurodegenerative disorders, from atomic perturbations to network-level disease.",
+    media: "https://images.unsplash.com/photo-1559757175-0eb30cd8c063?q=80&w=1920&auto=format&fit=crop",
+  },
+  {
+    title: "AI x Drug Discovery",
+    description: "Deep learning to uncover novel therapeutic mechanisms for Alzheimer's and beyond.",
+    media: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1920&auto=format&fit=crop",
+  },
+  {
+    title: "Protein Interactomes",
+    description: "Structurally informed interactome modeling across the human proteome.",
+    media: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1920&auto=format&fit=crop",
+  },
+  {
+    title: "Predictive Biology",
+    description: "Experimentally grounded data to power the next era of simulated biology.",
+    media: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=1920&auto=format&fit=crop",
+  },
+  {
+    title: "Shobhita",
+    description: "Computational biophysicist. PhD, Cornell. Based in San Francisco.",
+    media: "https://assets.codepen.io/7558/orange-portrait-001.jpg",
+  },
+];
 
 const publications = [
   {
@@ -50,24 +87,24 @@ export default function Home() {
   return (
     <main id="top">
       <DynamicIslandNav />
-      <PrismaHero />
 
-      <Section id="about" eyebrow="Introduction" title="Physics, AI & life itself">
-        <div className="grid gap-10 md:grid-cols-2">
-          <p className="text-base leading-relaxed text-primary/70 md:text-lg">
-            I am a PhD-trained computational biophysicist with interdisciplinary
-            training in mathematics, physics, biomedical sciences, and AI
-            research. My work applies AI to uncover novel therapeutic
-            mechanisms, particularly in neurodegenerative diseases.
-          </p>
-          <p className="text-base leading-relaxed text-primary/70 md:text-lg">
-            I bring scientific rigor, first-principles thinking, and commercial
-            fluency to hard technology problems — and I spent 10+ years
-            teaching technical subjects, translating complex ideas clearly for
-            diverse audiences. Now based in San Francisco.
-          </p>
-        </div>
-      </Section>
+      {/* Gallery hero — glass-transition slideshow */}
+      <Lumina slides={gallerySlides} />
+
+      {/* Editorial intro */}
+      <div id="about" className="scroll-mt-20 pt-10">
+        <Hero07
+          tagline="Computational biophysics, AI, and drug discovery"
+          title="Decoding the brain — from atomic perturbations to therapeutics."
+          description="PhD in Biophysics from Cornell. Applying deep learning to protein interactomes and neurodegenerative disease, with a focus on experimentally grounded data for predictive biology. Now based in San Francisco."
+          landscapeImage="https://images.unsplash.com/photo-1628595351029-c2bf17511435?q=80&w=1920&auto=format&fit=crop"
+          landscapeAlt="DNA helix — molecular biology"
+          animation="subtle"
+          variant="compact"
+          primaryCTA={{ ctaEnabled: true, text: "View publications", link: "#publications", variant: "default" }}
+          secondaryCTA={{ ctaEnabled: true, text: "Get in touch", link: "#contact", variant: "link" }}
+        />
+      </div>
 
       <Section id="research" eyebrow="Focus" title="Research">
         <div className="grid gap-6 sm:grid-cols-2">
@@ -141,19 +178,29 @@ export default function Home() {
         </ul>
       </Section>
 
-      <footer id="contact" className="px-2 pb-2 md:px-3 md:pb-3">
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-14 text-center md:rounded-[2rem] md:py-20">
-          <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.4] mix-blend-overlay" />
-          <p className="mb-2 text-xs uppercase tracking-[0.25em] text-primary/50">Contact</p>
-          <h2 className="mb-6 text-3xl font-medium tracking-tight text-primary sm:text-4xl">
-            Let&apos;s build at the frontier
+      {/* Velvet Mystique footer */}
+      <footer id="contact" className="relative overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop"
+          alt="Night sky over mountains"
+          className="absolute inset-0 h-full w-full object-cover opacity-60"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-black/40 to-black/80" />
+        <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.4] mix-blend-overlay" />
+        <div className="relative z-10 mx-auto max-w-5xl px-6 py-24 text-center md:py-36">
+          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-white/50">Contact</p>
+          <h2 className="mb-4 text-3xl font-medium tracking-tight text-white sm:text-5xl">
+            Velvet Mystique
           </h2>
+          <p className="mx-auto mb-10 max-w-md text-sm text-white/60 sm:text-base">
+            Wrapped in the deep, luxurious embrace of the night.
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm">
             <a
               href="https://scholar.google.com/citations?hl=en&user=JzQ0ALcAAAAJ"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary/60 transition-colors hover:text-primary"
+              className="text-white/60 transition-colors hover:text-white"
             >
               Google Scholar
             </a>
@@ -161,7 +208,7 @@ export default function Home() {
               href="https://www.linkedin.com/in/shobhitagupta"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary/60 transition-colors hover:text-primary"
+              className="text-white/60 transition-colors hover:text-white"
             >
               LinkedIn
             </a>
@@ -169,12 +216,12 @@ export default function Home() {
               href="https://www.instagram.com/drguptaseeks"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary/60 transition-colors hover:text-primary"
+              className="text-white/60 transition-colors hover:text-white"
             >
               Instagram
             </a>
           </div>
-          <p className="mt-10 text-xs text-primary/30">
+          <p className="mt-14 text-xs text-white/30">
             © {new Date().getFullYear()} Dr. Shobhita Gupta
           </p>
         </div>

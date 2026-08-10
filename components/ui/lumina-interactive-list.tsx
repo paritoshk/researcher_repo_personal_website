@@ -6,7 +6,13 @@ import React, { useEffect, useRef } from 'react';
 declare const gsap: any;
 declare const THREE: any;
 
-export function Component() {
+export interface LuminaSlide {
+  title: string;
+  description: string;
+  media: string;
+}
+
+export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -75,7 +81,7 @@ export function Component() {
         const PROGRESS_UPDATE_INTERVAL = 50;
         const TRANSITION_DURATION = () => SLIDER_CONFIG.settings.transitionDuration;
 
-        const slides = [
+        const slides = slidesProp ?? [
             { title: "Ethereal Glow", description: "A soft, radiant light that illuminates the soul.", media: "https://assets.codepen.io/7558/orange-portrait-001.jpg" },
             { title: "Rose Mirage", description: "Lost in a desert of blooming dreams and endless horizons.", media: "https://assets.codepen.io/7558/orange-portrait-002.jpg" },
             { title: "Velvet Mystique", description: "Wrapped in the deep, luxurious embrace of the night.", media: "https://assets.codepen.io/7558/orange-portrait-003.jpg" },
