@@ -95,7 +95,7 @@ export default function Home() {
         </div>
       </div>
 
-      <section id="research" data-lumina-track className="relative h-[400vh] scroll-mt-0">
+      <section id="research" data-lumina-track className="relative h-[500vh] scroll-mt-0">
         <div className="sticky top-0 flex h-screen flex-col justify-center px-4 sm:px-8">
           <div className="mx-auto w-full max-w-6xl">
             <div className="mb-3 flex items-center gap-3">

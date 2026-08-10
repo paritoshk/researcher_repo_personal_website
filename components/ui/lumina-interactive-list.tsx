@@ -91,7 +91,7 @@ export function Component({
 
         const SLIDE_DURATION = () => SLIDER_CONFIG.settings.autoSlideSpeed;
         const PROGRESS_UPDATE_INTERVAL = 50;
-        const TRANSITION_DURATION = () => SLIDER_CONFIG.settings.transitionDuration;
+        const TRANSITION_DURATION = () => (scrollHijack ? 0.9 : SLIDER_CONFIG.settings.transitionDuration);
 
         const slides = slidesProp ?? [
             { title: "Ethereal Glow", description: "A soft, radiant light that illuminates the soul.", media: "https://assets.codepen.io/7558/orange-portrait-001.jpg" },
@@ -419,32 +419,31 @@ export function Component({
                     window.scrollTo({ top, behavior: "smooth" });
                 };
                 const slideTop = (idx: number, total: number) => track.offsetTop + ((idx + 0.5) / slides.length) * total;
-                let pinDisabled = false;
-                const onScroll = () => {
+                let pendingIdx = -1;
+                const syncToScroll = () => {
                     if (!texturesLoaded) return;
                     const rect = track.getBoundingClientRect();
-                    if (document.documentElement.dataset.anchorJump) {
-                        // Anchor navigation may legitimately pass the section; release the pin
-                        if (rect.bottom < window.innerHeight) pinDisabled = true;
-                        return;
-                    }
                     const total = trackTotal();
                     if (total <= 0) return;
                     const progress = Math.min(0.999, Math.max(0, -rect.top / total));
                     const idx = Math.min(slides.length - 1, Math.floor(progress * slides.length));
-                    if (!pinDisabled && maxSeen < slides.length - 1 && rect.bottom < window.innerHeight + 2) {
-                        // Guard only the exit: cannot leave the section before every slide has been shown
-                        window.scrollTo({ top: slideTop(Math.min(maxSeen + 1, slides.length - 1), total), behavior: "instant" as ScrollBehavior });
-                        return;
-                    }
-                    if (idx !== currentSlideIndex && !isTransitioning) {
-                        const step = pinDisabled ? idx : Math.min(idx, currentSlideIndex + 1);
-                        navigateToSlide(step);
-                        maxSeen = Math.max(maxSeen, step);
-                    }
+                    if (idx === currentSlideIndex) { pendingIdx = -1; return; }
+                    if (isTransitioning) { pendingIdx = idx; return; }
+                    navigateToSlide(idx);
+                    maxSeen = Math.max(maxSeen, idx);
                 };
-                window.addEventListener("scroll", onScroll, { passive: true });
-                onScroll();
+                // Apply any navigation that arrived mid-transition
+                const catchUp = setInterval(() => {
+                    if (!isTransitioning && pendingIdx !== -1 && pendingIdx !== currentSlideIndex) {
+                        const idx = pendingIdx;
+                        pendingIdx = -1;
+                        navigateToSlide(idx);
+                        maxSeen = Math.max(maxSeen, idx);
+                    }
+                }, 120);
+                void catchUp;
+                window.addEventListener("scroll", syncToScroll, { passive: true });
+                syncToScroll();
                 root.querySelector(".slide-arrow-prev")?.addEventListener("click", () => scrollToSlide(Math.max(0, currentSlideIndex - 1)));
                 root.querySelector(".slide-arrow-next")?.addEventListener("click", () => { maxSeen = Math.max(maxSeen, Math.min(slides.length - 1, currentSlideIndex + 1)); scrollToSlide(Math.min(slides.length - 1, currentSlideIndex + 1)); });
             } else {
