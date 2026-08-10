@@ -167,7 +167,9 @@ export function Component({ slides: slidesProp }: { slides?: LuminaSlide[] } = {
         };
 
         const splitText = (text: string) => {
-            return text.split('').map(char => `<span style="display: inline-block; opacity: 0;">${char === ' ' ? '&nbsp;' : char}</span>`).join('');
+            return text.split(' ').map(word =>
+                `<span style="display: inline-block; white-space: nowrap; margin-right: 0.25em;">${word.split('').map(char => `<span style="display: inline-block;">${char}</span>`).join('')}</span>`
+            ).join('');
         };
 
         const updateContent = (idx: number) => {
