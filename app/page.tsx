@@ -36,7 +36,7 @@ const gallerySlides = [
   {
     title: "Shobhita",
     description: "Computational biophysicist. PhD, Cornell. Based in San Francisco.",
-    media: "https://assets.codepen.io/7558/orange-portrait-001.jpg",
+    media: "/images/shobhita-graduation.png",
   },
 ];
 
@@ -181,9 +181,9 @@ export default function Home() {
       {/* Velvet Mystique footer */}
       <footer id="contact" className="relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop"
-          alt="Night sky over mountains"
-          className="absolute inset-0 h-full w-full object-cover opacity-60"
+          src="https://images.unsplash.com/photo-1617791160536-598cf32026fb?q=80&w=1920&auto=format&fit=crop"
+          alt="Glowing brain in deep violet"
+          className="absolute inset-0 h-full w-full object-cover opacity-50"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background via-black/40 to-black/80" />
         <div className="noise-overlay pointer-events-none absolute inset-0 opacity-[0.4] mix-blend-overlay" />
