@@ -418,6 +418,7 @@ export function Component({
                     const top = track.offsetTop + ((idx + 0.5) / slides.length) * total;
                     window.scrollTo({ top, behavior: "smooth" });
                 };
+                const slideTop = (idx: number, total: number) => track.offsetTop + ((idx + 0.5) / slides.length) * total;
                 const onScroll = () => {
                     if (!texturesLoaded) return;
                     const rect = track.getBoundingClientRect();
@@ -425,9 +426,14 @@ export function Component({
                     if (total <= 0) return;
                     const progress = Math.min(0.999, Math.max(0, -rect.top / total));
                     const idx = Math.min(slides.length - 1, Math.floor(progress * slides.length));
-                    if (idx > maxSeen + 1) {
-                        // Flung past unseen slides: snap back to the next unseen one
-                        window.scrollTo({ top: track.offsetTop + ((maxSeen + 1 + 0.5) / slides.length) * total });
+                    // Hold position while a transition is playing
+                    if (isTransitioning && idx > currentSlideIndex) {
+                        window.scrollTo({ top: slideTop(currentSlideIndex, total), behavior: "instant" as ScrollBehavior });
+                        return;
+                    }
+                    // Never allow jumping more than one slide ahead of the one on screen
+                    if (idx > currentSlideIndex + 1) {
+                        window.scrollTo({ top: slideTop(currentSlideIndex + 1, total), behavior: "instant" as ScrollBehavior });
                         return;
                     }
                     if (idx !== currentSlideIndex && !isTransitioning) {

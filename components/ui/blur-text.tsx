@@ -35,28 +35,37 @@ const BlurText: React.FC<BlurTextProps> = ({
     return () => observer.unobserve(el);
   }, []);
 
-  const segments = useMemo(() => {
-    return animateBy === "words" ? text.split(" ") : text.split("");
-  }, [text, animateBy]);
+  const words = useMemo(() => text.split(" "), [text]);
+
+  const segmentStyle = (i: number): React.CSSProperties => ({
+    display: "inline-block",
+    filter: inView ? "blur(0px)" : "blur(10px)",
+    opacity: inView ? 1 : 0,
+    transform: inView
+      ? "translateY(0)"
+      : `translateY(${direction === "top" ? "-20px" : "20px"})`,
+    transition: `all 0.5s ease-out ${i * delay}ms`,
+  });
+
+  let letterIndex = 0;
 
   return (
     <p ref={ref} className={`inline-flex flex-wrap ${className}`} style={style}>
-      {segments.map((segment, i) => (
-        <span
-          key={i}
-          style={{
-            display: "inline-block",
-            filter: inView ? "blur(0px)" : "blur(10px)",
-            opacity: inView ? 1 : 0,
-            transform: inView
-              ? "translateY(0)"
-              : `translateY(${direction === "top" ? "-20px" : "20px"})`,
-            transition: `all 0.5s ease-out ${i * delay}ms`,
-            whiteSpace: segment === " " ? "pre" : undefined,
-          }}
-        >
-          {segment}
-          {animateBy === "words" && i < segments.length - 1 ? "\u00A0" : ""}
+      {words.map((word, w) => (
+        <span key={w} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
+          {animateBy === "letters" ? (
+            word.split("").map((char, c) => {
+              const i = letterIndex++;
+              return (
+                <span key={c} style={segmentStyle(i)}>
+                  {char}
+                </span>
+              );
+            })
+          ) : (
+            <span style={segmentStyle(w)}>{word}</span>
+          )}
+          {w < words.length - 1 ? "\u00A0" : ""}
         </span>
       ))}
     </p>
