@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { DynamicIslandNav } from "@/components/ui/dynamic-island-nav";
 import { Section } from "@/components/ui/section";
 import { ArrowUpRight } from "lucide-react";
@@ -13,11 +14,19 @@ const Lumina = dynamic(
   { ssr: false },
 );
 
-const heroSlide = [
+const heroSlideDesktop = [
   {
     title: "",
     description: "",
     media: "/images/shobhita-graduation-wide.jpg",
+  },
+];
+
+const heroSlideMobile = [
+  {
+    title: "",
+    description: "",
+    media: "/images/shobhita-graduation-mobile.jpg",
   },
 ];
 
@@ -69,6 +78,12 @@ const publications = [
 ];
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(max-width: 640px)").matches);
+  }, []);
+
   return (
     <main id="top">
       <PageLoader />
@@ -76,7 +91,9 @@ export default function Home() {
 
       {/* Hero — her photo, name landing, one-line thesis */}
       <div id="about" className="lumina-hero relative">
-        <Lumina slides={heroSlide} autoSlide={false} />
+        {isMobile !== null && (
+          <Lumina slides={isMobile ? heroSlideMobile : heroSlideDesktop} autoSlide={false} />
+        )}
         <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end px-5 pb-12 sm:px-10 sm:pb-14">
           <h1 className="font-light leading-[0.95] tracking-tight text-[#E1E0CC]">
             <BlurText
