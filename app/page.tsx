@@ -80,14 +80,14 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end px-5 pb-12 sm:px-10 sm:pb-14">
           <h1 className="font-light leading-[0.95] tracking-tight text-[#E1E0CC]">
             <BlurText
-              text="Dr. Shobhita Gupta"
+              text="Shobhita Gupta, PhD"
               animateBy="letters"
               delay={55}
-              className="text-[13.5vw] sm:text-[10vw] lg:text-[8.5vw]"
+              className="text-[9.5vw] sm:text-[7.5vw] lg:text-[6.5vw]"
             />
           </h1>
           <BlurText
-            text="Making biology predictive with experimental-grade data, not synthetic proxies."
+            text="Computational biophysicist decoding the biology of disease to build better medicines."
             animateBy="words"
             delay={110}
             className="mt-4 max-w-2xl text-sm text-[#E1E0CC]/80 sm:text-base md:text-lg"
@@ -109,6 +109,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <Section id="theses" eyebrow="Ideas" title="Theses">
+        <ul className="space-y-6">
+          <li className="flex flex-col gap-1 border-l-2 border-primary/30 pl-5">
+            <span className="text-lg font-medium text-primary">The Next Therapeutic Frontier</span>
+            <span className="text-sm text-primary/60">Medicine Beyond Molecules</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-primary/40">Forthcoming</span>
+          </li>
+        </ul>
+      </Section>
 
       <Section id="publications" eyebrow="Selected work" title="Publications">
         <ul className="divide-y divide-white/10">
@@ -184,14 +194,6 @@ export default function Home() {
           </h2>
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm">
             <a
-              href="https://scholar.google.com/citations?hl=en&user=JzQ0ALcAAAAJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/60 transition-colors hover:text-white"
-            >
-              Google Scholar
-            </a>
-            <a
               href="https://www.linkedin.com/in/shobhitagupta"
               target="_blank"
               rel="noopener noreferrer"
@@ -206,6 +208,12 @@ export default function Home() {
               className="text-white/60 transition-colors hover:text-white"
             >
               Instagram
+            </a>
+            <a
+              href="mailto:shobhita.gupta1@gmail.com"
+              className="text-white/60 transition-colors hover:text-white"
+            >
+              Email
             </a>
           </div>
           <p className="mt-14 text-xs text-white/30">
